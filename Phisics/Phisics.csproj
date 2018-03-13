@@ -302,6 +302,7 @@
     <Compile Include="Assets\Scripts\RagDoll.cs" />
     <Compile Include="Assets\Scripts\RagDollJointBreak.cs" />
     <Compile Include="Assets\Scripts\RagDollTrigger.cs" />
+    <Compile Include="Assets\Scripts\Spawner.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

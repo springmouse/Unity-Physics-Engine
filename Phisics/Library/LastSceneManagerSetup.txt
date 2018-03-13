@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/RagDoll/_Scenes/00 Ragdoll.unity
+- path: Assets/_Scenes_/00 Ragdoll.unity
   isLoaded: 1
   isActive: 1
