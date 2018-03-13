@@ -7,7 +7,12 @@ public class RagDoll : MonoBehaviour
 {
 
     private Animator m_animator = null;
+    private Transform[] m_allBodyParts;
+    private float m_elapsedTime = 0;
+
     public List<Rigidbody> rigidbodies = new List<Rigidbody>();
+    public float gravity;
+    public float deathTimmer;
 
     public bool RagdollOn
     {
@@ -28,16 +33,36 @@ public class RagDoll : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        m_animator = GetComponent<Animator>();
+        m_allBodyParts = transform.GetComponentsInChildren<Transform>();
 
+        m_animator = GetComponent<Animator>();
+        
         foreach (Rigidbody r in rigidbodies)
         {
             r.isKinematic = true;
         }
+
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (RagdollOn == false)
+        {
+            transform.position += Vector3.down * gravity * Time.deltaTime;
+        }
+
+        m_elapsedTime += Time.deltaTime;
+
+        if (m_elapsedTime > deathTimmer)
+        {
+            for (int i = 0; i < m_allBodyParts.Length; i++)
+            {
+                Destroy(m_allBodyParts[i].gameObject);
+            }
+
+            Destroy(this);
+        }
 	}
 }
