@@ -7,9 +7,8 @@ public class CharacterControlerScript : MonoBehaviour
     Vector3 m_moveDirection;
     Vector3 m_averageMoveDirection;
 
-    Vector3 m_startPos;
-    float m_jumpTime = 1;
-
+    Vector3 m_previousScale;
+    
     public float Speed;
     public float jumpSpeed;
     public float rotationSpeed;
@@ -17,6 +16,9 @@ public class CharacterControlerScript : MonoBehaviour
     public float mass;
 
     public float gravity;
+
+    public float buttonRayCastDist;
+    public float lasserRayCaseDist;
 
     public LineRenderer LR;
     public float laserTime;
@@ -37,15 +39,25 @@ public class CharacterControlerScript : MonoBehaviour
 
         ShootLaser();
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        ShootDeleteLaser();
+
+        CheckForButtons();
+
+        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
         {
+            m_previousScale = transform.localScale;
             transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * 0.5f, transform.localScale.z);
             transform.position += new Vector3(0, -0.5f, 0);
         }
 
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * 2, transform.localScale.z);
+            transform.localScale = m_previousScale; //new Vector3(transform.localScale.x, transform.localScale.y * 2, transform.localScale.z);
+        }
+
+        if (Input.GetKeyUp(KeyCode.RightControl))
+        {
+            transform.localScale = new Vector3(1, 1, 1);
         }
 
         if (m_elapsedLaserTime > laserTime)
@@ -97,7 +109,7 @@ public class CharacterControlerScript : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            Physics.Raycast(ray, out hit, 25);
+            Physics.Raycast(ray, out hit, lasserRayCaseDist);
 
             GameObject go;
             RagDoll rd = null;
@@ -112,7 +124,10 @@ public class CharacterControlerScript : MonoBehaviour
 
                 if ((rd = go.GetComponentInParent<RagDoll>()) != null)
                 {
-                    rd.RagdollOn = true;
+                    if (rd.RagdollOn == false)
+                    {
+                        rd.RagdollOn = true;
+                    }
                 }
 
                 if (go.GetComponent<Rigidbody>())
@@ -122,7 +137,7 @@ public class CharacterControlerScript : MonoBehaviour
             }
             else
             {
-                linePoints[1] = Camera.main.ScreenToWorldPoint(Input.mousePosition) + ray.direction * 25;
+                linePoints[1] = Camera.main.ScreenToWorldPoint(Input.mousePosition) + ray.direction * lasserRayCaseDist;
             }
 
             LR.positionCount = 2;
@@ -132,7 +147,41 @@ public class CharacterControlerScript : MonoBehaviour
         }
 
     }
-    
+
+    void ShootDeleteLaser()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Physics.Raycast(ray, out hit, lasserRayCaseDist);
+            
+            Vector3[] linePoints = new Vector3[2];
+            linePoints[0] = transform.position;
+
+            if (hit.transform != null)
+            {
+                linePoints[1] = hit.transform.position;
+
+                if (hit.transform.tag.Contains("World") != true)
+                {
+                    Destroy(hit.transform.gameObject);
+                }
+            }
+            else
+            {
+                linePoints[1] = Camera.main.ScreenToWorldPoint(Input.mousePosition) + ray.direction * lasserRayCaseDist;
+            }
+
+            LR.positionCount = 2;
+            LR.SetPositions(linePoints);
+
+            m_elapsedLaserTime = 0;
+        }
+
+    }
+
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit.gameObject.GetComponent<Rigidbody>())
@@ -145,6 +194,26 @@ public class CharacterControlerScript : MonoBehaviour
 
             hit.gameObject.GetComponent<Rigidbody>().AddForce(force);
         }
+    }
+
+    private void CheckForButtons()
+    {
+        Ray dir = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(dir, out hit, buttonRayCastDist))
+        {
+            if (hit.collider.tag.Contains("Button") && Input.GetKey(KeyCode.F))
+            {
+                if (hit.collider.GetComponent<SpawnButton>())
+                {
+                    hit.collider.GetComponent<SpawnButton>().SpawnObjects();
+                }
+            }
+            //Debug.Log(hit.collider.name);
+        }
+
+
     }
 
     private void FixedUpdate()

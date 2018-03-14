@@ -2370,7 +2370,7 @@ MonoBehaviour:
   - {fileID: 54149839089463426}
   - {fileID: 54910000461187738}
   gravity: 0
-  deathTimmer: 10
+  deathTimmer: 20
 --- !u!135 &135059760387792364
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -298,10 +298,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CharacterControlerScript.cs" />
+    <Compile Include="Assets\Scripts\CleanUp.cs" />
     <Compile Include="Assets\Scripts\PlatForm.cs" />
     <Compile Include="Assets\Scripts\RagDoll.cs" />
     <Compile Include="Assets\Scripts\RagDollJointBreak.cs" />
     <Compile Include="Assets\Scripts\RagDollTrigger.cs" />
+    <Compile Include="Assets\Scripts\SoftBody.cs" />
+    <Compile Include="Assets\Scripts\SpawnButton.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

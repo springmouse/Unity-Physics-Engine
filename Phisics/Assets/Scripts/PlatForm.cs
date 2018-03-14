@@ -44,7 +44,6 @@ public class PlatForm : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("we ran");
         if (other.tag == "Player")
         {
             other.transform.SetParent(transform);

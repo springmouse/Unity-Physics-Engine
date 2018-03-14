@@ -26,6 +26,11 @@ public class RagDollJointBreak : MonoBehaviour
 
         foreach (CharacterJoint cj in m_joints)
         {
+            if (cj.gameObject == null)
+            {
+                continue;
+            }
+
             if (cj.currentForce.sqrMagnitude > breakForceSqr)
             {
                 if (cj.name.Contains("Arm") || cj.name.Contains("Head") || cj.name.Contains("UpLeg"))

@@ -59,7 +59,10 @@ public class RagDoll : MonoBehaviour
         {
             for (int i = 0; i < m_allBodyParts.Length; i++)
             {
-                Destroy(m_allBodyParts[i].gameObject);
+                if (m_allBodyParts[i] != null)
+                {
+                    Destroy(m_allBodyParts[i].gameObject);
+                }
             }
 
             Destroy(this);
